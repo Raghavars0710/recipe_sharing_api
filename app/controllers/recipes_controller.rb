@@ -1,10 +1,32 @@
 class RecipesController < ApplicationController
   before_action :authorize_request
-  before_action :find_recipe, only: [:show, :update, :destroy]
-  
+  before_action :find_recipe, only: [:show, :update, :destroy, :search, :search_by_tag]
+
   def index
     @recipes = Recipe.all
     render json: @recipes, status: :ok
+  end
+
+  def search
+    search_query = params[:search]
+    @results = Recipe.where('title LIKE ? OR ingredients LIKE ? OR tags LIKE ?',"%#{search_query}%", "%#{search_query}%", "%#{search_query}%")
+
+    if @results.any?
+      render json: @results, status: :ok
+    else
+      render json: { errors: "No recipes found matching the search criteria" }, status: :not_found
+    end
+  end
+
+  def search_by_tag
+    tag_query = params[:tag]
+    @results = Recipe.where('tags LIKE ?', "%#{tag_query}%")
+
+    if @results.any?
+      render json: @results, status: :ok
+    else
+      render json: { errors: "No recipes found with the specified tag" }, status: :not_found
+    end
   end
 
   def show
@@ -37,6 +59,7 @@ class RecipesController < ApplicationController
     end
   end
 
+
   private
 
   def find_recipe
@@ -49,4 +72,5 @@ class RecipesController < ApplicationController
   def recipe_params
     params.require(:recipe).permit(:title, :ingredients, :instructions, :tags)
   end
+
 end
