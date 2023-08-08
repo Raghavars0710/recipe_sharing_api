@@ -10,7 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_05_133850) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_08_180154) do
+  create_table "favorites", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "recipe_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "recipes", force: :cascade do |t|
+    t.string "title"
+    t.text "ingredients"
+    t.text "instructions"
+    t.string "tags"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "username"
@@ -18,6 +35,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_05_133850) do
     t.string "password_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "role", default: 0
   end
 
 end

@@ -1,3 +1,4 @@
+require_relative '../../lib/json_web_token'
 class AuthenticationController < ApplicationController
  before_action :authorize_request, except: :login
 

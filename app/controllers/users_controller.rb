@@ -18,16 +18,14 @@ class UsersController < ApplicationController
     if @user.save
       render json: @user, status: :created
     else
-      render json: { errors: @user.errors.full_messages },
-             status: :unprocessable_entity
+      render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
   
   def update
     unless @user.update(user_params)
-      render json: { errors: @user.errors.full_messages },
-             status: :unprocessable_entity
+      render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -45,8 +43,6 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.permit(
-      :avatar, :name, :username, :email, :password, :password_confirmation
-    )
+    params.permit(:name, :username, :role, :email, :password, :password_confirmation)
   end
 end
