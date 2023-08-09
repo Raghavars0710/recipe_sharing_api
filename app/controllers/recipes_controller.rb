@@ -3,7 +3,14 @@ class RecipesController < ApplicationController
   before_action :find_recipe, only: [:show, :update, :destroy, :search, :search_by_tag]
 
   def index
-    @recipes = Recipe.all
+    @user = @current_user
+    # @user = User.find_by_username!( params[:])
+    # byebug
+    if @user.role == "customer"
+      @recipes = @user.recipes.all
+    else
+      @recipes = Recipe.all
+    end
     render json: @recipes, status: :ok
   end
 
@@ -70,7 +77,7 @@ class RecipesController < ApplicationController
   end
 
   def recipe_params
-    params.require(:recipe).permit(:title, :ingredients, :instructions, :tags)
+    params.require(:recipe).permit(:title, :ingredients, :instructions, :tags, :user_id)
   end
 
 end

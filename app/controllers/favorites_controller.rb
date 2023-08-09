@@ -1,6 +1,11 @@
 class FavoritesController < ApplicationController
   before_action :authorize_request
   
+  def index
+    @favorites = current_user.favorites.includes(:recipe)
+    render json: @favorites, each_serializer: FavoriteSerializer, status: :ok
+  end
+  # byebug
   def create
     @recipe = Recipe.find(params[:recipe_id])
     @favorite = @recipe.favorites.build(user: current_user)
