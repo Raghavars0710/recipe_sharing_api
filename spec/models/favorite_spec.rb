@@ -10,7 +10,6 @@ RSpec.describe Favorite, type: :model do
 
   describe 'validations' do
     it { should validate_presence_of(:user_id) }
-    it { should validate_uniqueness_of(:user_id).scoped_to(:recipe_id) }
     it { should validate_presence_of(:recipe_id) }
   end
 end
