@@ -1,14 +1,10 @@
 class FavoritesController < ApplicationController
   before_action :authorize_request
-  
-  def index
-    @favorites = current_user.favorites.includes(:recipe)
-    render json: @favorites, each_serializer: FavoriteSerializer, status: :ok
-  end
-  # byebug
+  before_action :set_favorite, only: [:destroy]
+
   def create
     @recipe = Recipe.find(params[:recipe_id])
-    @favorite = @recipe.favorites.build(user: current_user)
+    @favorite = @recipe.favorites.build(user_id: @current_user.id)
     
     if @favorite.save
       render json: { message: 'Recipe added to favorites' }, status: :created
@@ -18,19 +14,23 @@ class FavoritesController < ApplicationController
   end
   
   def destroy
-    @favorite = Favorite.find_by(id: params[:id], user: current_user)
-    if @favorite
+    if @favorite.user_id == @current_user.id 
       @favorite.destroy
-      render json: { message: 'Recipe removed from favorites' }, status: :ok
+      head :no_content
     else
-      render json: { errors: 'Favorite not found' }, status: :not_found
+      render json: { error: 'Unauthorized to delete this favorite.' }, status: :unauthorized
     end
   end
   
   private
-  
+
+  def set_favorite
+    @recipe = Recipe.find(params[:recipe_id])
+    @favorite = @recipe.favorites.find_by(params[:id],user_id:@current_user.id )
+  end
+
   def authorize_request
-    unless current_user
+    unless @current_user
       render json: { errors: 'Unauthorized' }, status: :unauthorized
     end
   end

@@ -42,6 +42,45 @@
 #   user_id: 
 # )
 
+
+# Assuming you have 6 users with IDs 1 to 6
+
+# User 1
+# Recipe.create!(
+#   title: "User 1 Recipe 1",
+#   ingredients: "Ingredients for User 1 Recipe 1...",
+#   instructions: "Instructions for User 1 Recipe 1...",
+#   tags: "user 1, recipe 1",
+#   user_id: 1
+# )
+
+# Recipe.create!(
+#   title: "User 1 Recipe 2",
+#   ingredients: "Ingredients for User 1 Recipe 2...",
+#   instructions: "Instructions for User 1 Recipe 2...",
+#   tags: "user 1, recipe 2",
+#   user_id: 1
+# )
+
+# # User 2
+# Recipe.create!(
+#   title: "User 2 Recipe 1",
+#   ingredients: "Ingredients for User 2 Recipe 1...",
+#   instructions: "Instructions for User 2 Recipe 1...",
+#   tags: "user 2, recipe 1",
+#   user_id: 2
+# )
+
+# Recipe.create!(
+#   title: "User 2 Recipe 2",
+#   ingredients: "Ingredients for User 2 Recipe 2...",
+#   instructions: "Instructions for User 2 Recipe 2...",
+#   tags: "user 2, recipe 2",
+#   user_id: 2
+# )
+
+# ... Repeat the same pattern for Users 3 to 6
+
 # Favorite.create!(
 #   user_id: 6,
 #   recipe_id: 1

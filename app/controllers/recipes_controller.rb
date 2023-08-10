@@ -1,13 +1,10 @@
 class RecipesController < ApplicationController
   before_action :authorize_request
-  before_action :find_recipe, only: [:show, :update, :destroy, :search, :search_by_tag]
+  before_action :find_recipe, only: [:show, :update, :destroy]
 
   def index
-    @user = @current_user
-    # @user = User.find_by_username!( params[:])
-    # byebug
-    if @user.role == "customer"
-      @recipes = @user.recipes.all
+    if @current_user.role == "customer"
+      @recipes = @current_user.recipes.all
     else
       @recipes = Recipe.all
     end
@@ -16,8 +13,7 @@ class RecipesController < ApplicationController
 
   def search
     search_query = params[:search]
-    @results = Recipe.where('title LIKE ? OR ingredients LIKE ? OR tags LIKE ?',"%#{search_query}%", "%#{search_query}%", "%#{search_query}%")
-
+    @results = Recipe.where('ingredients LIKE ? ', "%#{search_query}%")
     if @results.any?
       render json: @results, status: :ok
     else
@@ -25,16 +21,26 @@ class RecipesController < ApplicationController
     end
   end
 
-  def search_by_tag
-    tag_query = params[:tag]
-    @results = Recipe.where('tags LIKE ?', "%#{tag_query}%")
-
+  def search_by_title
+    title_query = params[:title]
+    @results = Recipe.where('title LIKE ?', "%#{title_query}%")
     if @results.any?
       render json: @results, status: :ok
     else
       render json: { errors: "No recipes found with the specified tag" }, status: :not_found
     end
   end
+  
+  def search_by_tag
+    tag_query = params[:tags]
+    @results = Recipe.where('tags LIKE ?', "%#{tag_query}%")
+    if @results.any?
+      render json: @results, status: :ok
+    else
+      render json: { errors: "No recipes found with the specified tag" }, status: :not_found
+    end
+  end
+  
 
   def show
     render json: @recipe, status: :ok
@@ -51,6 +57,7 @@ class RecipesController < ApplicationController
   end
 
   def update
+    @recipe = Recipe.find(params[:id])
     if @recipe.update(recipe_params)
       render json: @recipe, status: :ok
     else
@@ -70,7 +77,7 @@ class RecipesController < ApplicationController
   private
 
   def find_recipe
-    @recipe = Recipe.find_by_id(params[:id])
+    @recipe = Recipe.find(params[:id])
     unless @recipe
       render json: { errors: 'Recipe not found' }, status: :not_found
     end
