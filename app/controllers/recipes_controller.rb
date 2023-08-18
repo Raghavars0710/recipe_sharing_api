@@ -13,7 +13,7 @@ class RecipesController < ApplicationController
 
   def search
     search_query = params[:search]
-    @results = Recipe.where('ingredients LIKE ? ', "%#{search_query}%")
+    @results = Recipe.where('ingredients LIKE ?', "%#{search_query}%")
     if @results.any?
       render json: @results, status: :ok
     else
@@ -30,7 +30,7 @@ class RecipesController < ApplicationController
       render json: { errors: "No recipes found with the specified tag" }, status: :not_found
     end
   end
-  
+
   def search_by_tag
     tag_query = params[:tags]
     @results = Recipe.where('tags LIKE ?', "%#{tag_query}%")
@@ -40,7 +40,6 @@ class RecipesController < ApplicationController
       render json: { errors: "No recipes found with the specified tag" }, status: :not_found
     end
   end
-  
 
   def show
     render json: @recipe, status: :ok
@@ -48,7 +47,7 @@ class RecipesController < ApplicationController
 
   def create
     @recipe = Recipe.new(recipe_params)
-    
+
     if @recipe.save
       render json: @recipe, status: :created
     else
@@ -73,7 +72,6 @@ class RecipesController < ApplicationController
     end
   end
 
-
   private
 
   def find_recipe
@@ -86,5 +84,4 @@ class RecipesController < ApplicationController
   def recipe_params
     params.require(:recipe).permit(:title, :ingredients, :instructions, :tags, :user_id)
   end
-
 end
